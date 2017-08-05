@@ -1,6 +1,7 @@
 'use strict';
 var express = require ('express');
 var app = express();
+var router = require('./routes');
 var morgan = require('morgan');
 var nunjucks = require('nunjucks');
 var bodyParser = require('body-parser');
@@ -26,10 +27,14 @@ app.use(bodyParser.json()); // would be for AJAX requests
 
 
 app.use(express.static(path.join(__dirname, '/public')));
+app.get('/', function(req, res){
+    res.send('hello world');
+});
+app.use('/', router);
 
-models.User.sync({force: true})
+models.User.sync({})
     .then(function () {
-        return models.Page.sync({force: true})
+        return models.Page.sync({})
     })
     .then(function () {
         // make sure to replace the name below with your express app

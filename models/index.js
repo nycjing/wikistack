@@ -1,5 +1,7 @@
 var Sequelize = require('sequelize');
-var db = new Sequelize('postgres://localhost:5432/wikistack',{logging: false});
+var db = new Sequelize('postgres://localhost:5432/wikistack', {
+    logging: false
+});
 
 var Page = db.define('page', {
     title: {
@@ -11,7 +13,7 @@ var Page = db.define('page', {
         allowNull: false,
         get() {
             const title = this.getDataValue('title');
-            return 'http://'  + title;
+            return '/wiki/'  + title;
         }
     },
     content: {
@@ -25,6 +27,22 @@ var Page = db.define('page', {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
     }
+},{
+   hooks:{
+       beforeValidate: (page) =>{
+           console.log(page.title);
+           if (page.title) {
+               // Removes all non-alphanumeric characters from title
+               // And make whitespace underscore
+
+               page.urlTitle = page.title.replace(/\s+/g, '_').replace(/\W/g, '');
+               return page.urlTitle;
+           } else {
+               // Generates random 5 letter string
+               return page.urlTitle = Math.random().toString(36).substring(2, 7);
+           }
+       }
+   }
 });
 
 var User = db.define('user', {
