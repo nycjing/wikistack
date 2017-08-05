@@ -4,6 +4,12 @@
   <h3>Pages</h3>
   <hr>
   <ul class="list-unstyled">
-    <!-- PLACEHOLDER LIST OF PAGES -->
+
+      {% for page in pages %}
+      <li><a href="{{ page.route}}">{{page.title}}</a>
+        <div class="page-body">{{page.content}}</div>
+      </li>
+      {% endfor %}
+
   </ul>
 {% endblock %}
