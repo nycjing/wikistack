@@ -11,7 +11,11 @@ var models = require('./models');
 // templating boilerplate setup
 app.engine('html', nunjucks.render); // how to render html templates
 app.set('view engine', 'html'); // what file extension do our templates have
-nunjucks.configure('views', { noCache: true }); // where to find the views, caching off
+var env = nunjucks.configure('views', { noCache: true }); // where to find the views, caching off
+
+// and then include these two lines of code to add the extension:
+var AutoEscapeExtension = require("nunjucks-autoescape")(nunjucks);
+env.addExtension('AutoEscapeExtension', new AutoEscapeExtension(env));
 
 // logging middleware
 app.use(morgan('dev'));

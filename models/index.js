@@ -1,4 +1,5 @@
 var Sequelize = require('sequelize');
+var marked = require('marked');
 var db = new Sequelize('postgres://localhost:5432/wikistack', {
     logging: false
 });
@@ -59,6 +60,9 @@ var Page = db.define('page', {
     getterMethods: {
         route: function() {
             return '/wiki/' + this.urlTitle;
+        },
+        renderedContent: function () {
+            return marked(this.content);
         }
     }
 
@@ -74,6 +78,7 @@ Page.findByTag = function(someTag){
             }
         });
 };
+
 Page.prototype.findSimilar = function () {
         console.log(this.tags);
         var pages = Page.findAll({

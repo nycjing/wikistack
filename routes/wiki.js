@@ -21,8 +21,6 @@ router.get('/search', function (req, res, next) {
     Page.findAll()
         .then(function (pages) {
             pages.map(function (page) {
-                console.log('page', page.tags, typeof page.tags);
-                console.log('tags list',tags, typeof tags);
                return tags = tags.concat(page.tags);
             });
             tags = Array.from(new Set(tags));
@@ -105,6 +103,19 @@ router.get('/:urlTitle', function (req, res, next) {
         })
         .catch(next);
 
+});
+
+router.get('/:urlTitle/delete', function (req, res, next) {
+
+    Page.destroy({
+        where: {
+            urlTitle: req.params.urlTitle
+        }
+    })
+        .then(function () {
+                res.redirect('/wiki');
+        })
+        .catch(next);
 });
 
 router.get('/:urlTitle/similar', function (req, res, next) {
