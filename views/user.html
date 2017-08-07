@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h3>{{user.name}}</h3>
+<hr>
+<ul class="list-unstyled">
+
+    {% for page in pages %}
+    <li><a href="{{ page.route}}">{{page.title}}</a>
+        <div class="page-body">{{page.content}}</div>
+    </li>
+    {% endfor %}
+
+</ul>
+{% endblock %}

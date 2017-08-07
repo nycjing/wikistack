@@ -22,6 +22,23 @@ var Page = db.define('page', {
     date: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
+    },
+    tags: {
+        type: Sequelize.ARRAY(Sequelize.STRING),
+        defaultValue: [],
+        set: function (tags) {
+
+            tags = tags || [];
+
+            if (typeof tags === 'string') {
+                tags = tags.split(',').map(function (str) {
+                    return str.trim();
+                });
+            }
+
+            this.setDataValue('tags', tags);
+
+        }
     }
 }, {
     hooks: {
@@ -44,7 +61,30 @@ var Page = db.define('page', {
             return '/wiki/' + this.urlTitle;
         }
     }
+
+
 });
+
+Page.findByTag = function(someTag){
+        return this.findAll({
+            where : {
+                tags: {
+                    $contains: [someTag],
+                }
+            }
+        });
+};
+Page.prototype.findSimilar = function () {
+        console.log(this.tags);
+        var pages = Page.findAll({
+            where:{
+                id:{$ne: this.id},
+                tags:{$overlap:this.tags}
+            }
+        });
+        return pages;
+};
+
 
 var User = db.define('user', {
     name: {
@@ -59,6 +99,8 @@ var User = db.define('user', {
         }
     }
 });
+
+Page.belongsTo(User, { as: 'author' });
 
 module.exports = {
     db: db,

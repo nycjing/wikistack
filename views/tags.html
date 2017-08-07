@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h3>Tags</h3>
+<hr>
+<ul class="list-unstyled">
+
+    {% for tag in tags %}
+    <li>
+        <a href="/wiki/search/{{tag}}" >{{ tag }}</a>
+    </li>
+    {% endfor %}
+
+</ul>
+{% endblock %}
